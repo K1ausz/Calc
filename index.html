@@ -74,12 +74,30 @@
 </div>
 
 <script>
+// 페이지가 로드될 때 저장된 값을 불러오는 함수
+window.onload = function() {
+    for (let i = 1; i <= 5; i++) {
+        const savedValue = localStorage.getItem('stone_' + i);
+        if (savedValue !== null) {
+            document.getElementById('in' + i).value = savedValue;
+        }
+    }
+    calc(); // 불러온 값으로 즉시 계산 실행
+};
+
 function calc() {
     const v1 = parseInt(document.getElementById('in1').value) || 0;
     const v2 = parseInt(document.getElementById('in2').value) || 0;
     const v3 = parseInt(document.getElementById('in3').value) || 0;
     const v4 = parseInt(document.getElementById('in4').value) || 0;
     const v5 = parseInt(document.getElementById('in5').value) || 0;
+
+    // 입력값을 로컬 스토리지에 저장
+    localStorage.setItem('stone_1', v1);
+    localStorage.setItem('stone_2', v2);
+    localStorage.setItem('stone_3', v3);
+    localStorage.setItem('stone_4', v4);
+    localStorage.setItem('stone_5', v5);
 
     // 불씨 소모량 계산
     const totalFire = (v1 * 30) + (v2 * 40) + (v3 * 50) + (v4 * 60) + (v5 * 70);

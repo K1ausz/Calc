@@ -250,6 +250,11 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
+    /* 우측 정렬 클래스 추가 */
+    .align-right {
+      text-align: right;
+    }
+
     .result-area {
       margin-top: 20px;
       display: grid;
@@ -553,19 +558,19 @@
       </div>
 
       <div class="section-title">자산 및 시세 정보</div>
-      <div class="input-group" style="grid-template-columns: 140px 1fr 40px;">
-        <label>현재 보유 겁화</label>
-        <input type="number" id="a-cur-item" value="0" oninput="calcAnalysis()">
+      <div class="input-group" style="grid-template-columns: 200px 1fr 40px;">
+        <label>보유 겁화</label>
+        <input type="number" id="a-cur-item" class="align-right" value="0" oninput="calcAnalysis()">
         <span>개</span>
       </div>
-      <div class="input-group" style="grid-template-columns: 140px 1fr 40px;">
+      <div class="input-group" style="grid-template-columns: 200px 1fr 40px;">
         <label>하결 시세</label>
-        <input type="number" id="a-p-low" value="600000" step="50000" oninput="calcAnalysis()">
+        <input type="number" id="a-p-low" class="align-right" value="600000" step="50000" oninput="calcAnalysis()">
         <span>미파</span>
       </div>
-      <div class="input-group" style="grid-template-columns: 140px 1fr 40px;">
+      <div class="input-group" style="grid-template-columns: 200px 1fr 40px;">
         <label>중결 시세</label>
-        <input type="number" id="a-p-mid" value="6000000" step="500000" oninput="calcAnalysis()">
+        <input type="number" id="a-p-mid" class="align-right" value="6000000" step="500000" oninput="calcAnalysis()">
         <span>미파</span>
       </div>
 

@@ -1,307 +1,530 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>비욘드 통합 관리</title>
-    <style>
-        :root {
-            --bg: #1a1a1b;
-            --card: #2c2c2e;
-            --accent: #ffca28;
-            --text: #e8eaed;
-            --border: #444;
-            --btn-bg: #3a3a3c;
-        }
+  <meta charset="UTF-8">
+  <title>비욘드 통합 관리 도구</title>
+  <style>
+    :root {
+      --bg: #1a1a1b;
+      --card: #2c2c2e;
+      --accent: #ffca28;
+      --text: #e8eaed;
+      --border: #444;
+      --btn-bg: #3a3a3c;
+    }
 
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Malgun Gothic', sans-serif; 
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Malgun Gothic', sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-        .main-wrapper {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 30px;
-            max-width: 1100px;
-            width: 100%;
-        }
+    .main-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 30px;
+      max-width: 1100px;
+      width: 100%;
+    }
 
-        .container { 
-            background-color: var(--card); 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            border: 1px solid var(--border);
-            width: 480px;
-        }
+    .container {
+      background-color: var(--card);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      width: 480px;
+    }
 
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; position: relative; }
-        h2 { color: var(--accent); margin: 0; font-size: 22px; }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 10px;
+      position: relative;
+    }
 
-        .section-title { font-size: 14px; color: var(--accent); font-weight: bold; margin: 15px 0 10px 0; border-left: 3px solid var(--accent); padding-left: 8px; }
-        
-        .btn-selector { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; background: #333; padding: 10px; border-radius: 8px; }
-        .select-btn {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #555;
-            background: var(--btn-bg);
-            color: #ccc;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .select-btn.ready { transition: all 0.2s; }
-        .select-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    h2 {
+      color: var(--accent);
+      margin: 0;
+      font-size: 22px;
+    }
 
-        .input-group { display: grid; grid-template-columns: 125px 1fr 40px; align-items: center; margin-bottom: 10px; gap: 10px; }
-        .input-group.simple { grid-template-columns: 90px 300px; gap: 10px; }
-        .input-group.simple input { text-align: left; }
-        
-        input { 
-            background: #3a3a3c; border: 1px solid #555; color: #fff; padding: 8px; 
-            border-radius: 6px; text-align: right; font-size: 14px; outline: none; 
-        }
-        input:focus { border-color: var(--accent); }
-        input[readonly] { color: var(--accent) !important; font-weight: bold; cursor: default; background-color: rgba(255, 202, 40, 0.05); }
+    .section-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: bold;
+      margin: 15px 0 10px 0;
+      border-left: 3px solid var(--accent);
+      padding-left: 8px;
+    }
 
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
+    .btn-selector {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 15px;
+      background: #333;
+      padding: 10px;
+      border-radius: 8px;
+    }
 
-        .ticket-area { 
-            display: grid; grid-template-columns: repeat(2, 188px); gap: 12px; 
-            background: #252526; padding: 15px; border-radius: 8px; border: 1px solid #333; justify-content: center;
-        }
-        .ticket-area input { width: 100%; height: 34px; box-sizing: border-box; text-align: center; padding: 0; }
+    .select-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #555;
+      background: var(--btn-bg);
+      color: #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+    }
 
-        .result-box { margin-top: 20px; background: #1a1a1b; padding: 15px; border-radius: 8px; border-left: 5px solid var(--accent); }
-        .result-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-        .danger { color: #ff5252; font-weight: bold; }
-        .success { color: #00e676; font-weight: bold; }
-        .progress-container { background: #444; height: 10px; border-radius: 5px; margin-top: 10px; overflow: hidden; }
-        #progress-bar { background: linear-gradient(90deg, #ffca28, #ffa000); height: 100%; width: 0%; transition: 0.5s; }
+    .select-btn.ready {
+      transition: all 0.2s;
+    }
 
-        .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .label { font-size: 12px; color: #aaa; }
-        
-        .template-output { background: #3a3a3c; color: var(--accent); padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 13px; white-space: pre-wrap; margin-top: 15px; border: 1px solid #222; min-height: 80px; }
-        
-        .btn-main { width: 100%; margin-top: 10px; background: var(--accent); border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; font-size: 16px; }
-        .btn-reset { position: absolute; right: 0; bottom: 10px; background: #444; color: #ccc; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+    .select-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
 
-        @media (max-width: 1000px) { .main-wrapper { flex-direction: column; align-items: center; } }
-    </style>
+    .input-group {
+      display: grid;
+      grid-template-columns: 125px 1fr 40px;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .input-group.simple {
+      grid-template-columns: 90px 300px;
+      gap: 10px;
+    }
+
+    .input-group.simple input {
+      text-align: left;
+    }
+
+    input {
+      background: #3a3a3c;
+      border: 1px solid #555;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: right;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    input[readonly] {
+      color: var(--accent) !important;
+      font-weight: bold;
+      cursor: default;
+      background-color: rgba(255, 202, 40, 0.05);
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .ticket-area {
+      display: grid;
+      grid-template-columns: repeat(2, 188px);
+      gap: 12px;
+      background: #252526;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      justify-content: center;
+    }
+
+    .ticket-area input {
+      width: 100%;
+      height: 34px;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 0;
+    }
+
+    .result-box {
+      margin-top: 20px;
+      background: #1a1a1b;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid var(--accent);
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .danger {
+      color: #ff5252;
+      font-weight: bold;
+    }
+
+    .success {
+      color: #00e676;
+      font-weight: bold;
+    }
+
+    .progress-container {
+      background: #444;
+      height: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      background: linear-gradient(90deg, #ffca28, #ffa000);
+      height: 100%;
+      width: 0%;
+      transition: 0.5s;
+    }
+
+    .cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .template-output {
+      background: #3a3a3c;
+      color: var(--accent);
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      margin-top: 15px;
+      border: 1px solid #222;
+      min-height: 80px;
+    }
+
+    .btn-main {
+      width: 100%;
+      margin-top: 10px;
+      background: var(--accent);
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      font-size: 16px;
+    }
+
+    .btn-reset {
+      position: absolute;
+      right: 0;
+      bottom: 10px;
+      background: #444;
+      color: #ccc;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    @media (max-width: 1000px) {
+      .main-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="main-wrapper">
+  <div class="main-wrapper">
     <div class="container">
-        <div class="header">
-            <h2>전란의 겁화 계산기</h2>
-            <button class="btn-reset" onclick="resetFire()">초기화</button>
+      <div class="header">
+        <h2>전란의 겁화 계산기</h2>
+        <button class="btn-reset" onclick="resetFire()">초기화</button>
+      </div>
+
+      <div class="section-title">목표 겁화 설정</div>
+      <div class="btn-selector" id="fire-goal-group">
+        <button class="select-btn active" data-value="500" onclick="setFireGoal(500)">500개</button>
+        <button class="select-btn" data-value="1000" onclick="setFireGoal(1000)">1000개</button>
+      </div>
+
+      <div class="section-title">현재 자산</div>
+      <div class="input-group">
+        <label>보유 겁화</label>
+        <input type="number" id="f-item" class="watch-fire" value="0">
+        <span>개</span>
+      </div>
+      <div class="input-group">
+        <label>보유 불씨</label>
+        <input type="number" id="f-ember" class="watch-fire" value="0" style="color:var(--accent);">
+        <span>개</span>
+      </div>
+      <div class="input-group">
+        <label>하급 시세(미파)</label>
+        <input type="number" id="f-price" class="watch-fire" value="550000">
+        <span>G</span>
+      </div>
+
+      <div class="section-title">보유 중인 결정석</div>
+      <div class="input-group"><label>하급 결정석</label><input type="number" id="c1" class="watch-fire" value="0"><span>개</span></div>
+      <div class="input-group"><label>중급 결정석</label><input type="number" id="c2" class="watch-fire" value="0"><span>개</span></div>
+      <div class="input-group"><label>상급 결정석</label><input type="number" id="c3" class="watch-fire" value="0"><span>개</span></div>
+      <div class="input-group"><label>특급 결정석</label><input type="number" id="c4" class="watch-fire" value="0"><span>개</span></div>
+      <div class="input-group"><label>불멸 결정석</label><input type="number" id="c5" class="watch-fire" value="0"><span>개</span></div>
+
+      <div class="result-box">
+        <div class="result-item">
+          <span>✨ 예상 합계(결정석 포함):</span>
+          <span id="res-total" style="color:var(--accent); font-weight:bold;">0 / 500</span>
         </div>
-        <div class="section-title">목표 겁화 설정</div>
-        <div class="btn-selector" id="fire-goal-group">
-            <button class="select-btn active" data-value="500" onclick="setFireGoal(500)">500개</button>
-            <button class="select-btn" data-value="1000" onclick="setFireGoal(1000)">1000개</button>
+        <div class="result-item">
+          <span>💰 부족분 구매 비용:</span>
+          <span id="res-gold" class="success">0 G</span>
         </div>
-        <div class="section-title">현재 자산</div>
-        <div class="input-group"><label>보유 겁화</label><input type="number" id="f-item" class="watch-fire" value="0"><span>개</span></div>
-        <div class="input-group"><label>보유 불씨</label><input type="number" id="f-ember" class="watch-fire" value="0" style="color:var(--accent);"><span>개</span></div>
-        <div class="input-group"><label>하급 시세(미파)</label><input type="number" id="f-price" class="watch-fire" value="550000"><span>G</span></div>
-        <div class="section-title">보유 중인 결정석</div>
-        <div class="input-group"><label>하급 결정석</label><input type="number" id="c1" class="watch-fire" value="0"><span>개</span></div>
-        <div class="input-group"><label>중급 결정석</label><input type="number" id="c2" class="watch-fire" value="0"><span>개</span></div>
-        <div class="input-group"><label>상급 결정석</label><input type="number" id="c3" class="watch-fire" value="0"><span>개</span></div>
-        <div class="input-group"><label>특급 결정석</label><input type="number" id="c4" class="watch-fire" value="0"><span>개</span></div>
-        <div class="input-group"><label>불멸 결정석</label><input type="number" id="c5" class="watch-fire" value="0"><span>개</span></div>
-        <div class="result-box">
-            <div class="result-item"><span>✨ 예상 합계(결정석 포함):</span><span id="res-total" style="color:var(--accent); font-weight:bold;">0 / 500</span></div>
-            <div class="result-item"><span>💰 부족분 구매 비용:</span><span id="res-gold" class="success">0 G</span></div>
-            <hr style="border:0; border-top:1px dashed #444; margin:10px 0;">
-            <div class="result-item"><span>💎 부족한 겁화:</span><span id="res-item-gap" class="danger">0 개</span></div>
-            <div class="result-item"><span>🔥 부족한 불씨:</span><span id="res-gap" class="danger">0 개</span></div>
-            <div id="res-info" style="font-size:12px; color:#aaa; margin-top:8px; line-height:1.5;"></div>
-            <div class="progress-container"><div id="progress-bar"></div></div>
+        <hr style="border:0; border-top:1px dashed #444; margin:10px 0;">
+        <div class="result-item">
+          <span>💎 부족한 겁화:</span>
+          <span id="res-item-gap" class="danger">0 개</span>
         </div>
+        <div class="result-item">
+          <span>🔥 부족한 불씨:</span>
+          <span id="res-gap" class="danger">0 개</span>
+        </div>
+        <div id="res-info" style="font-size:12px; color:#aaa; margin-top:8px; line-height:1.5;"></div>
+        <div class="progress-container">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
     </div>
 
     <div class="container">
-        <div class="header"><h2>비욘드 잠쩔 양식</h2></div>
-        <div class="section-title">티켓 및 판수 계산</div>
-        <div class="ticket-area">
-            <div class="cell"><div class="label">시작 티켓</div><input type="number" id="t-start" class="watch-beyond" value="0"></div>
-            <div class="cell"><div class="label">획득 티켓</div><input type="number" id="t-drop" class="watch-beyond" value="0"></div>
-            <div class="cell"><div class="label">종료 티켓</div><input type="number" id="t-end" class="watch-beyond" value="0"></div>
-            <div class="cell"><div class="label">계산된 판수</div><input type="text" id="t-result" value="0" readonly></div>
+      <div class="header">
+        <h2>비욘드 잠쩔 양식</h2>
+      </div>
+
+      <div class="section-title">티켓 및 판수 계산</div>
+      <div class="ticket-area">
+        <div class="cell">
+          <div class="label">시작 티켓</div>
+          <input type="number" id="t-start" class="watch-beyond" value="0">
         </div>
-        <div class="section-title"> 설정 </div>
-        <div class="btn-selector" id="mode-group">
-            <button class="select-btn active" data-mode="normal" onclick="setBeyondMode('normal')">노경증</button>
-            <button class="select-btn" data-mode="exp" onclick="setBeyondMode('exp')">300경증</button>
+        <div class="cell">
+          <div class="label">획득 티켓</div>
+          <input type="number" id="t-drop" class="watch-beyond" value="0">
         </div>
-        <div class="input-group simple"><label>기사</label><input type="text" id="seller" class="watch-beyond" value="클래식"></div>
-        <div class="input-group simple"><label>승객</label><input type="text" id="buyers" class="watch-beyond" value="1, 2, 3"></div>
-        <div id="exp-fields" style="display:none; border-top: 1px dashed #555; margin-top: 12px; padding-top: 12px;">
-            <div class="input-group simple"><label>시간(h)</label><input type="number" id="p-time" class="watch-beyond" value="1"></div>
-            <div class="input-group simple"><label>금액</label><input type="number" id="p-price" class="watch-beyond" value="700" step="50"></div>
+        <div class="cell">
+          <div class="label">종료 티켓</div>
+          <input type="number" id="t-end" class="watch-beyond" value="0">
         </div>
-        <div class="template-output" id="display"></div>
-        <button class="btn-main" onclick="copyForm()">양식 복사하기</button>
+        <div class="cell">
+          <div class="label">계산된 판수</div>
+          <input type="text" id="t-result" value="0" readonly>
+        </div>
+      </div>
+
+      <div class="section-title">설정</div>
+      <div class="btn-selector" id="mode-group">
+        <button class="select-btn active" data-mode="normal" onclick="setBeyondMode('normal')">노경증</button>
+        <button class="select-btn" data-mode="exp" onclick="setBeyondMode('exp')">300경증</button>
+      </div>
+
+      <div class="input-group simple">
+        <label>기사</label>
+        <input type="text" id="seller" class="watch-beyond" value="클래식">
+      </div>
+      <div class="input-group simple">
+        <label>승객</label>
+        <input type="text" id="buyers" class="watch-beyond" value="1, 2, 3">
+      </div>
+
+      <div id="exp-fields" style="display:none; border-top: 1px dashed #555; margin-top: 12px; padding-top: 12px;">
+        <div class="input-group simple">
+          <label>시간(h)</label>
+          <input type="number" id="p-time" class="watch-beyond" value="1">
+        </div>
+        <div class="input-group simple">
+          <label>금액</label>
+          <input type="number" id="p-price" class="watch-beyond" value="700" step="50">
+        </div>
+      </div>
+
+      <div class="template-output" id="display"></div>
+      <button class="btn-main" onclick="copyForm()">양식 복사하기</button>
     </div>
-</div>
+  </div>
 
-<script>
-let currentTargetGoal = 500;
-let currentBeyondMode = 'normal';
+  <script>
+    let currentTargetGoal = 500;
+    let currentBeyondMode = 'normal';
 
-// 공통 저장 로직
-const saveToLocal = (id, val) => localStorage.setItem('dual_save_' + id, val);
+    // 공통 저장 로직
+    const saveToLocal = (id, val) => localStorage.setItem('dual_save_' + id, val);
 
-function setFireGoal(val) {
-    currentTargetGoal = val;
-    saveToLocal('target', val);
-    document.querySelectorAll('#fire-goal-group .select-btn').forEach(btn => {
+    function setFireGoal(val) {
+      currentTargetGoal = val;
+      saveToLocal('target', val);
+      document.querySelectorAll('#fire-goal-group .select-btn').forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.dataset.value) === val);
-    });
-    calcFire();
-}
+      });
+      calcFire();
+    }
 
-function setBeyondMode(mode) {
-    currentBeyondMode = mode;
-    saveToLocal('mode', mode);
-    document.querySelectorAll('#mode-group .select-btn').forEach(btn => {
+    function setBeyondMode(mode) {
+      currentBeyondMode = mode;
+      saveToLocal('mode', mode);
+      document.querySelectorAll('#mode-group .select-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === mode);
-    });
-    updateForm();
-}
+      });
+      updateForm();
+    }
 
-function calcFire() {
-    const ids = ['f-item', 'f-ember', 'f-price', 'c1', 'c2', 'c3', 'c4', 'c5'];
-    const v = {};
-    ids.forEach(id => {
+    function calcFire() {
+      const ids = ['f-item', 'f-ember', 'f-price', 'c1', 'c2', 'c3', 'c4', 'c5'];
+      const v = {};
+      ids.forEach(id => {
         v[id] = parseInt(document.getElementById(id).value) || 0;
         saveToLocal(id, v[id]);
-    });
+      });
 
-    const pureOwned = v['f-item'];
-    const fromCrystals = (v['c1']*1) + (v['c2']*3) + (v['c3']*5) + (v['c4']*10) + (v['c5']*30);
-    const expectedTotal = pureOwned + fromCrystals;
-    const itemGap = Math.max(0, currentTargetGoal - expectedTotal);
-    const goldNeeded = itemGap * v['f-price'];
-    const reqFireForCrystals = (v['c1']*30) + (v['c2']*40) + (v['c3']*50) + (v['c4']*60) + (v['c5']*70);
-    const crystalFireDiff = v['f-ember'] - reqFireForCrystals;
+      const pureOwned = v['f-item'];
+      const fromCrystals = (v['c1'] * 1) + (v['c2'] * 3) + (v['c3'] * 5) + (v['c4'] * 10) + (v['c5'] * 30);
+      const expectedTotal = pureOwned + fromCrystals;
+      const itemGap = Math.max(0, currentTargetGoal - expectedTotal);
+      const goldNeeded = itemGap * v['f-price'];
+      const reqFireForCrystals = (v['c1'] * 30) + (v['c2'] * 40) + (v['c3'] * 50) + (v['c4'] * 60) + (v['c5'] * 70);
+      const crystalFireDiff = v['f-ember'] - reqFireForCrystals;
 
-    document.getElementById('res-total').innerText = `${expectedTotal.toLocaleString()} / ${currentTargetGoal.toLocaleString()}`;
-    document.getElementById('res-gold').innerText = goldNeeded.toLocaleString() + " G";
-    document.getElementById('res-item-gap').innerText = itemGap.toLocaleString() + " 개";
-    
-    const gapDisplay = document.getElementById('res-gap');
-    const gapLabel = gapDisplay.previousElementSibling;
-    if (crystalFireDiff >= 0) {
+      document.getElementById('res-total').innerText = `${expectedTotal.toLocaleString()} / ${currentTargetGoal.toLocaleString()}`;
+      document.getElementById('res-gold').innerText = goldNeeded.toLocaleString() + " G";
+      document.getElementById('res-item-gap').innerText = itemGap.toLocaleString() + " 개";
+
+      const gapDisplay = document.getElementById('res-gap');
+      const gapLabel = gapDisplay.previousElementSibling;
+      if (crystalFireDiff >= 0) {
         gapLabel.innerText = "✨ 남는 불씨:";
         gapDisplay.innerText = crystalFireDiff.toLocaleString() + " 개";
-        gapDisplay.className = "success"; 
-    } else {
+        gapDisplay.className = "success";
+      } else {
         gapLabel.innerText = "🔥 교환 부족분:";
         gapDisplay.innerText = Math.abs(crystalFireDiff).toLocaleString() + " 개";
         gapDisplay.className = "danger";
-    }
-    
-    const info = document.getElementById('res-info');
-    if (expectedTotal >= currentTargetGoal && crystalFireDiff >= 0) {
+      }
+
+      const info = document.getElementById('res-info');
+      if (expectedTotal >= currentTargetGoal && crystalFireDiff >= 0) {
         info.innerHTML = `<span style="color:#00e676; font-weight:bold;">🎉 졸업!</span> 모든 결정석을 바꾸고도 불씨가 <b style="color:#00e676;">${crystalFireDiff.toLocaleString()}개</b> 남습니다.`;
-    } else if (itemGap > 0) {
+      } else if (itemGap > 0) {
         info.innerHTML = `💡 목표까지 겁화 <b>${itemGap}개</b> 부족 (구매 시 <b>${goldNeeded.toLocaleString()}G</b> 필요)`;
-    } else {
+      } else {
         info.innerHTML = `<span style="color:var(--accent);">이미 목표치를 달성했거나 교환 대기 중입니다.</span>`;
+      }
+      document.getElementById('progress-bar').style.width = Math.min(100, (expectedTotal / currentTargetGoal * 100)) + "%";
     }
-    document.getElementById('progress-bar').style.width = Math.min(100, (expectedTotal / currentTargetGoal * 100)) + "%";
-}
 
-function updateForm() {
-    const s = parseInt(document.getElementById('t-start').value) || 0;
-    const e = parseInt(document.getElementById('t-end').value) || 0;
-    const d = parseInt(document.getElementById('t-drop').value) || 0;
-    const count = s - e + d;
-    document.getElementById('t-result').value = count;
+    function updateForm() {
+      const s = parseInt(document.getElementById('t-start').value) || 0;
+      const e = parseInt(document.getElementById('t-end').value) || 0;
+      const d = parseInt(document.getElementById('t-drop').value) || 0;
+      const count = s - e + d;
+      document.getElementById('t-result').value = count;
 
-    const seller = document.getElementById('seller').value;
-    const buyers = document.getElementById('buyers').value;
-    const pTime = document.getElementById('p-time').value;
-    const pPrice = document.getElementById('p-price').value;
+      const seller = document.getElementById('seller').value;
+      const buyers = document.getElementById('buyers').value;
+      const pTime = document.getElementById('p-time').value;
+      const pPrice = document.getElementById('p-price').value;
 
-    const fields = ['t-start', 't-end', 't-drop', 'seller', 'buyers', 'p-time', 'p-price'];
-    fields.forEach(id => saveToLocal(id, document.getElementById(id).value));
+      const fields = ['t-start', 't-end', 't-drop', 'seller', 'buyers', 'p-time', 'p-price'];
+      fields.forEach(id => saveToLocal(id, document.getElementById(id).value));
 
-    let text = `판매자(플레이): ${seller}\n구매자(잠수): ${buyers}\n`;
-    if (currentBeyondMode === 'normal') {
+      let text = `판매자(플레이): ${seller}\n구매자(잠수): ${buyers}\n`;
+      if (currentBeyondMode === 'normal') {
         document.getElementById('exp-fields').style.display = 'none';
         text += `금액: 판당 10\n던전 이용시간: 노경증 비욘드 ${count}판`;
-    } else {
+      } else {
         document.getElementById('exp-fields').style.display = 'block';
         text += `금액: ${pPrice}\n던전 이용시간: 비욘드 300경증 ${pTime}시간`;
+      }
+      document.getElementById('display').innerText = text;
     }
-    document.getElementById('display').innerText = text;
-}
 
-function resetFire() {
-    if(confirm("겁화 데이터를 초기화할까요?")) {
+    function resetFire() {
+      if (confirm("겁화 데이터를 초기화할까요?")) {
         ['f-item', 'f-ember', 'c1', 'c2', 'c3', 'c4', 'c5'].forEach(id => document.getElementById(id).value = 0);
         calcFire();
+      }
     }
-}
 
-function copyForm() {
-    const text = document.getElementById('display').innerText;
-    navigator.clipboard.writeText(text).then(() => alert("양식이 복사되었습니다!"));
-}
+    function copyForm() {
+      const text = document.getElementById('display').innerText;
+      navigator.clipboard.writeText(text).then(() => alert("양식이 복사되었습니다!"));
+    }
 
-window.onload = function() {
-    // 데이터 복구 리스트
-    const allFields = [
+    window.onload = function() {
+      const allFields = [
         'f-item', 'f-ember', 'f-price', 'c1', 'c2', 'c3', 'c4', 'c5',
         't-start', 't-end', 't-drop', 'seller', 'buyers', 'p-time', 'p-price'
-    ];
-    allFields.forEach(id => {
+      ];
+      allFields.forEach(id => {
         const val = localStorage.getItem('dual_save_' + id);
-        if(val !== null) document.getElementById(id).value = val;
-    });
+        if (val !== null) document.getElementById(id).value = val;
+      });
 
-    const savedTarget = localStorage.getItem('dual_save_target');
-    if(savedTarget) {
+      const savedTarget = localStorage.getItem('dual_save_target');
+      if (savedTarget) {
         currentTargetGoal = parseInt(savedTarget);
         document.querySelectorAll('#fire-goal-group .select-btn').forEach(btn => {
-            btn.classList.toggle('active', parseInt(btn.dataset.value) === currentTargetGoal);
+          btn.classList.toggle('active', parseInt(btn.dataset.value) === currentTargetGoal);
         });
-    }
+      }
 
-    const savedMode = localStorage.getItem('dual_save_mode');
-    if(savedMode) {
+      const savedMode = localStorage.getItem('dual_save_mode');
+      if (savedMode) {
         currentBeyondMode = savedMode;
         document.querySelectorAll('#mode-group .select-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.mode === currentBeyondMode);
+          btn.classList.toggle('active', btn.dataset.mode === currentBeyondMode);
         });
-    }
+      }
 
-    // 1번 최적화: 이벤트 리스너 통합 등록
-    document.querySelectorAll('.watch-fire').forEach(el => el.addEventListener('input', calcFire));
-    document.querySelectorAll('.watch-beyond').forEach(el => el.addEventListener('input', updateForm));
+      document.querySelectorAll('.watch-fire').forEach(el => el.addEventListener('input', calcFire));
+      document.querySelectorAll('.watch-beyond').forEach(el => el.addEventListener('input', updateForm));
 
-    calcFire();
-    updateForm();
+      calcFire();
+      updateForm();
 
-    setTimeout(() => {
+      setTimeout(() => {
         document.querySelectorAll('.select-btn').forEach(btn => btn.classList.add('ready'));
-    }, 100);
-};
-</script>
+      }, 100);
+    };
+  </script>
 </body>
 </html>

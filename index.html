@@ -652,7 +652,6 @@
       document.getElementById(paneId).classList.add('active');
       btn.classList.add('active');
       
-      // 효율 분석 탭 이동 시 자동 계산 (자산 연동)
       if (paneId === 'analysis-pane') {
         const curFire = document.getElementById('f-item').value;
         document.getElementById('a-cur-item').value = curFire;
@@ -710,8 +709,6 @@
         gapDisplay.previousElementSibling.innerText = "🔥 교환 부족분:";
       }
       document.getElementById('progress-bar').style.width = Math.min(100, (expectedTotal / currentTargetGoal * 100)) + "%";
-      
-      // 효율 분석 탭과 실시간 연동
       document.getElementById('a-cur-item').value = v['f-item'];
     }
 
@@ -724,7 +721,7 @@
       calcAnalysis();
     }
 
-    function calcAnalysis() {
+function calcAnalysis() {
       const current = parseInt(document.getElementById('a-cur-item').value) || 0;
       const pLow = parseInt(document.getElementById('a-p-low').value) || 0;
       const pMid = parseInt(document.getElementById('a-p-mid').value) || 0;
@@ -732,16 +729,22 @@
       const diff = Math.max(0, analysisGoal - current);
       document.getElementById('a-need-count').innerText = diff.toLocaleString() + " 개";
 
+      // 하급 계산
       const lowPrice = diff * pLow;
       const lowEmber = diff * 30;
-      const midQty = Math.ceil(diff / 3);
+      
+      // 중급 계산 (1개당 겁화 3개 효과)
+      const midQty = Math.ceil(diff / 3); 
       const midPrice = midQty * pMid;
       const midEmber = midQty * 40;
 
+      // 화면 표시 업데이트
       document.getElementById('low-price').innerText = lowPrice.toLocaleString() + " G";
       document.getElementById('low-ember').innerText = "🔥 불씨 " + lowEmber.toLocaleString() + "개";
+      
+      // 중급 결정석 칸에 "수량" 추가 표시
       document.getElementById('mid-price').innerText = midPrice.toLocaleString() + " G";
-      document.getElementById('mid-ember').innerText = "🔥 불씨 " + midEmber.toLocaleString() + "개";
+      document.getElementById('mid-ember').innerText = `🪨 결정석 ${midQty}개 / 🔥 불씨 ${midEmber.toLocaleString()}개`;
 
       const bLow = document.getElementById('box-low');
       const bMid = document.getElementById('box-mid');
@@ -767,9 +770,21 @@
         }
       }
     }
-
     /* --- 기타 양식 및 보석 로직 --- */
     function updateForm() {
+      // 판수 관련 데이터 저장
+      saveToLocal('t-start', document.getElementById('t-start').value);
+      saveToLocal('t-end', document.getElementById('t-end').value);
+      saveToLocal('t-drop', document.getElementById('t-drop').value);
+      
+      // 기사 및 승객 데이터 저장 (요청하신 부분)
+      saveToLocal('seller', document.getElementById('seller').value);
+      saveToLocal('buyers', document.getElementById('buyers').value);
+      
+      // 경험치 설정 저장
+      saveToLocal('p-time', document.getElementById('p-time').value);
+      saveToLocal('p-price', document.getElementById('p-price').value);
+
       const s = parseInt(document.getElementById('t-start').value) || 0;
       const e = parseInt(document.getElementById('t-end').value) || 0;
       const d = parseInt(document.getElementById('t-drop').value) || 0;
@@ -847,6 +862,7 @@
       if (savedMode) setBeyondMode(savedMode);
 
       document.querySelectorAll('.watch-fire').forEach(el => el.addEventListener('input', calcFire));
+      // 비욘드 양식 필드들에 입력 이벤트 연결 (입력 즉시 저장)
       document.querySelectorAll('.watch-beyond').forEach(el => el.addEventListener('input', updateForm));
 
       calcFire();
